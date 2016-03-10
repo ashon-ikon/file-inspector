@@ -23,3 +23,6 @@ src/Makefile
 src/Makefile.in
 stamp-h1
 
+# IDEs
+nbproject*
+idea*
