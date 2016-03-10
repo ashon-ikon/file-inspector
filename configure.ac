@@ -14,7 +14,14 @@ AC_CONFIG_HEADERS([config.h])
 
 ## Build Tools Checks
 AC_PROG_CXX
+AC_LANG_CPLUSPLUS
+AC_PROG_INSTALL
 AC_PROG_LIBTOOL
+
+## Optional params
+#AC_CHECK_ENABLE([debug], ,[
+#    [ --enable-debug Enable]
+#])
 
 
 ## Dependency checks
