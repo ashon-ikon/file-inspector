@@ -39,16 +39,21 @@ namespace FInspector {
             time_t lastModifed;
             uintmax_t size;
             FileType type;
+            bool operator < (const Fileinfo &rhs) {
+                return (filename < rhs.filename);
+            }
         };
 
 
         bool isRegularFile(Fileinfo &f);
+        static Glib::ustring getType(FileType ft);
 
     private:
 
     };
     
-    vector<Inspector::Fileinfo> getDirectoryContent(const Glib::ustring &p);
+    vector<Inspector::Fileinfo>
+    getDirectoryContent(const Glib::ustring &p, bool includeHidden = false);
 }
 #endif /* __FINSPECTOR_INSPECTOR__ */
 
