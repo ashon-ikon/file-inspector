@@ -15,7 +15,7 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
 
-    vector<Inspector::Fileinfo> list = getDirectoryContent("/home/yinka/");
+    DirectoryCollection list = getDirectoryContent("./");
 
     std::cout << "Found :" << list.size() << " items " << std::endl;
     

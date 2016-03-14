@@ -40,7 +40,7 @@ namespace FInspector {
             uintmax_t size;
             FileType type;
             bool operator < (const Fileinfo &rhs) {
-                return (filename < rhs.filename);
+                return (filename.lowercase() < rhs.filename.lowercase());
             }
         };
 
@@ -52,7 +52,9 @@ namespace FInspector {
 
     };
     
-    vector<Inspector::Fileinfo>
+    typedef vector< Inspector::Fileinfo > DirectoryCollection;
+
+    DirectoryCollection
     getDirectoryContent(const Glib::ustring &p, bool includeHidden = false);
 }
 #endif /* __FINSPECTOR_INSPECTOR__ */
