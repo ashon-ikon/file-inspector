@@ -6,16 +6,17 @@
  */
 #include <gtkmm/application.h>
 #include <glibmm/ustring.h>
-#include "inspector.h"
 #include <vector>
 #include <iostream>
+#include "common.h"
 
 using namespace FInspector;
 using namespace std;
 
 int main(int argc, char *argv[]) {
 
-    DirectoryCollection list = getDirectoryContent("./");
+    const Glib::ustring path = "./";
+    DirectoryCollection list = getDirectoryContent(path);
 
     std::cout << "Found :" << list.size() << " items " << std::endl;
     
