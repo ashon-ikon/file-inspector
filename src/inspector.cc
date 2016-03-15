@@ -9,8 +9,10 @@
 #include <iostream>
 #include <dirent.h>
 #include <sys/stat.h>
+#include <algorithm>
 
 using namespace std;
+using namespace Glib;
 
 namespace FInspector {
 
@@ -31,8 +33,35 @@ namespace FInspector {
         return fi.type == RegularFile;
 
     }
+    
+    ustring Inspector::getType(FileType ft) {
+        ustring type;
+        
+        switch (ft) {
+            case RegularFile:
+                type = "Regular file";
+                break;
+            case Directory:
+                type = "Directory";
+                break;
+            case SymLink:
+                type = "Sym-link";
+                break;
+            case Other:
+                type = "Other type of file";
+                break;
+        }
+        
+        return type;
+    }
 
-    vector<Inspector::Fileinfo> getDirectoryContent(const Glib::ustring& p) {
+    /**
+     * 
+     * @param p
+     * @param includeHidden
+     * @return 
+     */
+    vector<Inspector::Fileinfo> getDirectoryContent(const ustring& p, bool includeHidden) {
         vector<Inspector::Fileinfo> content;
 
         // First let's attempt to open the directory
@@ -42,18 +71,23 @@ namespace FInspector {
             dirent * entry;
             struct stat st;
             while ((entry = readdir(dp))) {
-                std::cout << entry->d_name << "... " << std::endl;
+                if (! includeHidden && '.' == entry->d_name[0]) {
+                // This is a hidden file, skip
+                    continue;
+                }
+                ustring fullpath = p.c_str();
+                fullpath += entry->d_name;
                 // Get the stat of file
-                if (stat(entry->d_name, &st) != -1) {
+                if (stat(fullpath.c_str(), &st) != -1) {
                     Inspector::Fileinfo info;
                     info.filename = entry->d_name;
                     info.lastModifed = st.st_mtime;
-                    info.path = entry->d_name;
+                    info.path = fullpath;
                     info.size = st.st_size;
 
                     // Get the file type
-                    switch (st.st_mode) {
-                        case S_IFDIR: info.type = RegularFile;
+                    switch (st.st_mode & S_IFMT) {
+                        case S_IFDIR: info.type = Directory;
                             break;
                         case S_IFLNK: info.type = SymLink;
                             break;
@@ -69,6 +103,9 @@ namespace FInspector {
             }
             // We are done close it
             closedir(dp);
+            
+            // Sort the items
+            std::sort(content.begin(), content.end());
         } else {
             // Failed to open the directory
             // Throw exception?
