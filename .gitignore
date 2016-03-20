@@ -25,7 +25,7 @@ stamp-h1
 
 # IDEs
 nbproject*
-idea*
+.idea*
 .autotools
 .cproject
 .project

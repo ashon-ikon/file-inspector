@@ -8,11 +8,11 @@
 #ifndef __FINSPECTOR_INSPECTOR__
 #define __FINSPECTOR_INSPECTOR__
 
-#include <glibmm/ustring.h>
 #include <ctime>
 #include <cstdint>
 #include <sys/types.h>
 #include <vector>
+#include <glibmm/ustring.h>
 
 using namespace std;
 
@@ -24,9 +24,9 @@ namespace FInspector {
         SymLink,
         Other
     };
-    
-    
+
     class Inspector {
+
     public:
         Inspector();
         Inspector(const Inspector &orig);
@@ -39,23 +39,26 @@ namespace FInspector {
             time_t lastModifed;
             uintmax_t size;
             FileType type;
-            bool operator < (const Fileinfo &rhs) {
+
+            bool operator<(const Fileinfo &rhs) {
                 return (filename.lowercase() < rhs.filename.lowercase());
             }
         };
 
 
+
+        vector < Fileinfo> static
+        getDirectoryContent(const Glib::ustring &p, bool includeHidden = false);
+
         bool isRegularFile(Fileinfo &f);
         static Glib::ustring getType(FileType ft);
-
+    protected:
+        
     private:
 
     };
-    
-    typedef vector< Inspector::Fileinfo > DirectoryCollection;
 
-    DirectoryCollection
-    getDirectoryContent(const Glib::ustring &p, bool includeHidden = false);
+    typedef vector< Inspector::Fileinfo > DirectoryCollection;
 }
 #endif /* __FINSPECTOR_INSPECTOR__ */
 
