@@ -13,14 +13,19 @@
 
 #include "fstr.h"
 
+typedef Glib::ustring gstring;
+
+using std::string;
+
 namespace FInspector {
 
+static const std::string excludeChars =  = " ";
 /**
  * Returns a left Trimmed string
  * @return 
  */
-Fstr Fstr::ltrim() {
-    Fstr str;
+gstring Fstr::ltrim(const gstring & iStr, const gstring purge, std::locale loc) {
+    gstring str;
     return str;
 }
 
@@ -28,9 +33,9 @@ Fstr Fstr::ltrim() {
  * Returns a right Trimmed string
  * @return 
  */
-Fstr Fstr::rtrim() {
+gstring Fstr::rtrim(const gstring & iStr, const gstring purge, std::locale loc) {
     
-    Fstr str;
+    gstring str;
     return str;
 }
 
@@ -38,9 +43,19 @@ Fstr Fstr::rtrim() {
  * Returns a right Trimmed string
  * @return 
  */
-Fstr Fstr::trim() {
+gstring Fstr::trim(const gstring & iStr, const gstring purge, std::locale loc) {
     
-    Fstr str;
+    gstring str;
+    return str;
+}
+
+/**
+ * Returns a right Trimmed string
+ * @return 
+ */
+gstring Fstr::trim(const st & iStr, const gstring purge, std::locale loc) {
+    
+    gstring str;
     return str;
 }
 
