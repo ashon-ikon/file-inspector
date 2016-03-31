@@ -13,9 +13,11 @@
 #include <string>
 #include <locale>
 
+#define DEFAULT_TRIM_STRING " \t\n\r\v\f"
+
 namespace FInspector {
     
-    extern static const std::string excludeChars;
+//extern static const Glib::ustring excludeChars;
 
 class Fstr {
 public:
@@ -23,22 +25,10 @@ public:
      * Returns a new trimmed string object
      * @return Glib::ustring 
      */
-    static Glib::ustring trim(
-        const Glib::ustring &,
-        const Glib::ustring purge = excludeChars,
-        std::locale &loc = std::locale::classic()
-    );
-
-    /**
-     * 
-     * @param  Glib::ustring str
-     * @param std::locale loc
-     * @return Glib::ustring 
-     */
-    static Glib::ustring trim(
-        const std::string &,
-        const std::string purge = excludeChars,
-        std::locale &loc = std::locale::classic()
+    static Glib::ustring& trim(
+        Glib::ustring& str,
+        const Glib::ustring& purge = DEFAULT_TRIM_STRING,
+        const std::locale& loc = std::locale::classic()
     );
 
     /**
@@ -47,10 +37,10 @@ public:
      * @param std::locale loc
      * @return Glib::ustring
      */
-    static Glib::ustring ltrim(
-        const Glib::ustring &,
-        const Glib::ustring purge = excludeChars,
-        std::locale &loc = std::locale::classic()
+    static Glib::ustring& ltrim(
+        Glib::ustring&,
+        const Glib::ustring& purge = DEFAULT_TRIM_STRING,
+        const std::locale& loc = std::locale::classic()
     );
 
     /**
@@ -59,10 +49,10 @@ public:
      * @param std::locale loc
      * @return  Glib::ustring
      */
-    static Glib::ustring rtrim(
-        const Glib::ustring &,
-        const Glib::ustring purge = excludeChars,
-        std::locale &loc = std::locale::classic()
+    static Glib::ustring& rtrim(
+        Glib::ustring&,
+        const Glib::ustring& purge = DEFAULT_TRIM_STRING,
+        const std::locale& loc = std::locale::classic()
     );
 
 protected:
