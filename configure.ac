@@ -6,7 +6,7 @@
 AC_INIT([file-inspector], [0.0.1], [gigalimit20@yahoo.com])
 
 ## Automake stuff
-AM_INIT_AUTOMAKE([-Wall -Werror foreign])
+AM_INIT_AUTOMAKE([subdir-objects -Wall -Werror foreign])
 AC_CONFIG_MACRO_DIRS([m4])
 
 ## Configuration stuff

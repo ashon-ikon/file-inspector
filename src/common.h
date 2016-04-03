@@ -10,7 +10,7 @@
 
 #include "../config.h"
 #include "inspector.h"
-#include "fstr.h"
+#include "helper/fstr.h"
 
 
 #endif /* __FINSPECTOR_COMMON__ */
