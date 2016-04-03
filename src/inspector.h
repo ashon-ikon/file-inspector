@@ -14,6 +14,23 @@
 #include <vector>
 #include <glibmm/ustring.h>
 
+#include "helper/fstr.h"
+
+/*
+ * Some macros
+ * 
+ */
+// Define directory separator
+#if defined(OS_WINDOWS) || defined(_WIN32) || defined(WIN32)
+    #ifndef FS_DIRECTORY_SEPARATOR
+        #define FS_DIRECTORY_SEPARATOR '\\'
+    #endif
+#else
+    #ifndef FS_DIRECTORY_SEPARATOR
+        #define FS_DIRECTORY_SEPARATOR '/'
+    #endif
+#endif
+
 using namespace std;
 
 namespace FInspector {
@@ -40,9 +57,7 @@ namespace FInspector {
             uintmax_t size;
             FileType type;
 
-            bool operator<(const Fileinfo &rhs) {
-                return (filename.lowercase() < rhs.filename.lowercase());
-            }
+            bool operator<(const Fileinfo &rhs);
         };
 
 

@@ -11,11 +11,16 @@
 #include <sys/stat.h>
 
 #include "inspector.h"
+#include "common.h"
 
 using namespace std;
 using namespace Glib;
 
 namespace FInspector {
+
+bool Inspector::Fileinfo::operator < (const Fileinfo& rhs) {
+    return (filename.lowercase() < rhs.filename.lowercase());
+}
 
 Inspector::Inspector() {
     // We need to set the local
@@ -65,9 +70,11 @@ ustring Inspector::getType(FileType ft) {
 vector< Inspector::Fileinfo >
 Inspector::getDirectoryContent(const ustring& p, bool includeHidden) {
     vector< Fileinfo > content;
-
+    
+    ustring tp = p; // We'll be trimming this
     // First let's attempt to open the directory
-    DIR * dp = opendir(p.c_str());
+    cout << "Trimmed!\n" << p << "\n" <<(Fstr::trim(tp, FS_DIRECTORY_SEPARATOR) + FS_DIRECTORY_SEPARATOR).c_str() << endl;
+    DIR * dp = opendir(Fstr::trim(tp, FS_DIRECTORY_SEPARATOR).c_str());
 
     if (dp) {
         dirent * entry;

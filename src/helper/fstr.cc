@@ -11,9 +11,10 @@
  * Created on 19 March 2016, 8:05 PM
  */
 
-#include "fstr.h"
 #include <functional>
 #include <algorithm>
+
+#include "fstr.h"
 
 typedef Glib::ustring gstring;
 
@@ -24,8 +25,6 @@ using std::locale;
 using namespace std::placeholders;
 
 namespace FInspector {
-
-//static const gstring excludeChars = DEFAULT_TRIM_STRING;
 
 static inline bool purgeCharacter(const gstring::value_type c, const gstring& chrList, const locale loc) {
     bool remove = false;
@@ -48,6 +47,16 @@ gstring& Fstr::ltrim(gstring& str, const gstring& purge, const std::locale& loc)
 }
 
 /**
+ * Returns a left Trimmed string
+ * @return 
+ */
+gstring& Fstr::ltrim(gstring& str, const char& purge, const std::locale& loc) {
+    gstring s;
+    s = purge;
+    return ltrim(str, s, loc);
+}
+
+/**
  * Returns a right Trimmed string
  * @return 
  */
@@ -59,12 +68,32 @@ gstring& Fstr::rtrim(gstring& str, const gstring& purge, const std::locale& loc)
 }
 
 /**
+ * Returns a right Trimmed string
+ * @return 
+ */
+gstring& Fstr::rtrim(gstring& str, const char& purge, const std::locale& loc) {
+    gstring s;
+    s = purge;
+    return rtrim(str, s, loc);
+}
+
+/**
  * Returns a Trimmed string
  * @return 
  */
 gstring& Fstr::trim(gstring& str, const gstring& purge, const std::locale& loc) {
     
-    return ltrim(rtrim(str));
+    return ltrim(rtrim(str, purge, loc), purge, loc);
+}
+
+/**
+ * Returns a Trimmed string
+ * @return 
+ */
+gstring& Fstr::trim(gstring& str, const char& purge, const std::locale& loc) {
+    gstring s;
+    s = purge;
+    return ltrim(rtrim(str, s, loc), s, loc);
 }
 
 }
