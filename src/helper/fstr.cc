@@ -29,9 +29,9 @@ namespace FInspector {
 static inline bool purgeCharacter(const gstring::value_type c, const gstring& chrList, const locale loc) {
     bool remove = false;
     if (chrList.empty()) {
-        remove = !! isspace(c, loc);
+        remove = ! isspace(c, loc);
     } else {
-        remove = chrList.find(c) != std::string::npos;
+        remove = chrList.find(c) == std::string::npos;
     }
     return remove;
 }
@@ -41,6 +41,7 @@ static inline bool purgeCharacter(const gstring::value_type c, const gstring& ch
  * @return 
  */
 gstring& Fstr::ltrim(gstring& str, const gstring& purge, const std::locale& loc) {
+    // Erase from the left
     auto rmFn = bind(purgeCharacter, _1, std::cref(purge), std::cref(loc));
     str.erase(str.begin(), find_if(str.begin(), str.end(), rmFn));
     return str;
@@ -72,9 +73,9 @@ gstring& Fstr::rtrim(gstring& str, const gstring& purge, const std::locale& loc)
  * @return 
  */
 gstring& Fstr::rtrim(gstring& str, const char& purge, const std::locale& loc) {
-    gstring s;
-    s = purge;
-    return rtrim(str, s, loc);
+    gstring pg;
+    pg = purge;
+    return rtrim(str, pg, loc);
 }
 
 /**
@@ -91,9 +92,9 @@ gstring& Fstr::trim(gstring& str, const gstring& purge, const std::locale& loc) 
  * @return 
  */
 gstring& Fstr::trim(gstring& str, const char& purge, const std::locale& loc) {
-    gstring s;
-    s = purge;
-    return ltrim(rtrim(str, s, loc), s, loc);
+    gstring pg;
+    pg = purge;
+    return ltrim(rtrim(str, pg, loc), pg, loc);
 }
 
 }
