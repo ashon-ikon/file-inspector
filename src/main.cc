@@ -15,12 +15,12 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
 
-    const Glib::ustring path = "./";
-    DirectoryCollection list = getDirectoryContent(path);
+    const Glib::ustring path = "/home/yinka/Downloads";
+    DirectoryCollection list = Inspector::getDirectoryContent(path);
 
     std::cout << "Found :" << list.size() << " items " << std::endl;
-    
-    
+
+
 
     int counter = 0;
     for (vector<Inspector::Fileinfo>::const_iterator it = list.begin();
