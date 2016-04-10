@@ -19,11 +19,12 @@ ltmain.sh
 m4/*
 missing
 src/.deps*
-src/*.deps*
+src/Helper/.deps*
 src/*.dirstamp*
 src/Makefile
 src/Makefile.in
 stamp-h1
+src/*.Po
 
 # IDEs
 nbproject*
