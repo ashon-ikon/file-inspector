@@ -19,8 +19,8 @@ ltmain.sh
 m4/*
 missing
 src/.deps*
-src/helper/.deps*
-src/helper/.dirstamp*
+src/*.deps*
+src/*.dirstamp*
 src/Makefile
 src/Makefile.in
 stamp-h1

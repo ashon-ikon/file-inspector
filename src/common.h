@@ -9,8 +9,8 @@
 #define __FINSPECTOR_COMMON__
 
 #include "../config.h"
-#include "inspector.h"
-#include "helper/fstr.h"
+#include "Helper/FileExplorer.h"
+#include "Helper/Fstr.h"
 
 
 #endif /* __FINSPECTOR_COMMON__ */
