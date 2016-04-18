@@ -33,3 +33,5 @@ nbproject*
 .cproject
 .project
 .settings*
+
+src/Helper/*.dirstamp

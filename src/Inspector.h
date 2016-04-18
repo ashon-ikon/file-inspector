@@ -5,8 +5,8 @@
  * Created on 2016-03-09, 13:41
  */
 
-#ifndef __FINSPECTOR_INSPECTOR__
-#define __FINSPECTOR_INSPECTOR__
+#ifndef FINSPECTOR_INSPECTOR__
+#define FINSPECTOR_INSPECTOR__
 
 #include <ctime>
 #include <cstdint>
@@ -35,5 +35,5 @@ namespace FInspector {
     };
 
 }
-#endif /* __FINSPECTOR_INSPECTOR__ */
+#endif /* FINSPECTOR_INSPECTOR__ */
 

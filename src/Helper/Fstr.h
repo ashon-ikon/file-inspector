@@ -5,8 +5,8 @@
  * Created on 19 March 2016, 10:05 PM
  */
 
-#ifndef __FINSPECTOR_HELPER_FSTR_H__
-#define __FINSPECTOR_HELPER_FSTR_H__
+#ifndef FINSPECTOR_HELPER_FSTR_H__
+#define FINSPECTOR_HELPER_FSTR_H__
 
 #include <glibmm/ustring.h>
 #include <iostream>
@@ -100,5 +100,5 @@ private:
 };
 
 }
-#endif /* __FINSPECTOR_HELPER_FSTR_H__ */
+#endif /* FINSPECTOR_HELPER_FSTR_H__ */
 

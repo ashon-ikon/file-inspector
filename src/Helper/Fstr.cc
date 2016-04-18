@@ -52,9 +52,8 @@ gstring& Fstr::ltrim(gstring& str, const gstring& purge, const std::locale& loc)
  * @return 
  */
 gstring& Fstr::ltrim(gstring& str, const char& purge, const std::locale& loc) {
-    gstring s;
-    s = purge;
-    return ltrim(str, s, loc);
+    gstring tmpPurge(1, purge);
+    return ltrim(str, tmpPurge, loc);
 }
 
 /**
@@ -73,9 +72,8 @@ gstring& Fstr::rtrim(gstring& str, const gstring& purge, const std::locale& loc)
  * @return 
  */
 gstring& Fstr::rtrim(gstring& str, const char& purge, const std::locale& loc) {
-    gstring pg;
-    pg = purge;
-    return rtrim(str, pg, loc);
+    gstring tmpPurge(1, purge);
+    return rtrim(str, tmpPurge, loc);
 }
 
 /**
@@ -92,9 +90,8 @@ gstring& Fstr::trim(gstring& str, const gstring& purge, const std::locale& loc) 
  * @return 
  */
 gstring& Fstr::trim(gstring& str, const char& purge, const std::locale& loc) {
-    gstring pg;
-    pg = purge;
-    return ltrim(rtrim(str, pg, loc), pg, loc);
+    gstring tmpPurge(1, purge);
+    return ltrim(rtrim(str, tmpPurge, loc), tmpPurge, loc);
 }
 
 }
