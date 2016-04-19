@@ -5,13 +5,13 @@
  * Created on 2016-03-15, 07-20
  */
 
-#ifndef __FINSPECTOR_COMMON__
-#define __FINSPECTOR_COMMON__
+#ifndef FINSPECTOR_COMMON__
+#define FINSPECTOR_COMMON__
 
 #include "../config.h"
-#include "inspector.h"
-#include "helper/fstr.h"
+#include "Helper/FileExplorer.h"
+#include "Helper/Fstr.h"
 
 
-#endif /* __FINSPECTOR_COMMON__ */
+#endif /* FINSPECTOR_COMMON__ */
 
