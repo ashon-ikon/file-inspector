@@ -40,6 +40,25 @@ FileExplorer::~FileExplorer() {
 
 }
 
+/**
+ * Makes Directory
+ * @param f
+ * @return 
+ */
+bool FileExplorer::makeDirectory(const Glib::ustring& f) {
+    return true;
+}
+
+/**
+ * Removes Directory
+ * @param f
+ * @return 
+ */
+bool FileExplorer::removeDirectory(const Glib::ustring& f) {
+    return true;
+}
+
+
 bool FileExplorer::isRegularFile(Fileinfo& fi) {
     return fi.type == RegularFile;
 
@@ -129,39 +148,16 @@ FileExplorer::getDirectoryContent(const ustring& p, bool includeHidden) {
 
         if (dp) {
             dirent * entry;
-            struct stat filestat;
             // Check that it is 
             while ((entry = readdir(dp))) {
                 if (! includeHidden && '.' == entry->d_name[0]) {
                     // This is a hidden file, skip
                     continue;
                 }
-                ustring fullpath = ctp;
-                fullpath += entry->d_name;
-                // Get the statistics of file
-                if (stat(fullpath.c_str(), &filestat) != -1) {
-                    FileExplorer::Fileinfo info;
-                    info.filename = entry->d_name;
-                    info.lastModifed = filestat.st_mtime;
-                    info.path = fullpath;
-                    info.size = filestat.st_size;
-
-                    // Get the file type
-                    switch (filestat.st_mode & S_IFMT) {
-                        case S_IFDIR: info.type = Directory;
-                            break;
-                        case S_IFLNK: info.type = SymLink;
-                            break;
-                        case S_IFREG: info.type = RegularFile;
-                            break;
-                        default:      info.type = Other;
-                            break;
-                    }
-
+                Fileinfo info;
+                if (getFileInfo(tp, entry, info)) {
                     // Add it
                     content.push_back(info);
-                } else {
-                    showErrorCode(fullpath.c_str());
                 }
             }
             // We are done close it
@@ -177,6 +173,36 @@ FileExplorer::getDirectoryContent(const ustring& p, bool includeHidden) {
     }
 
     return content;
+}
+
+bool FileExplorer::getFileInfo(const ustring& p, dirent * entry, FileExplorer::Fileinfo& info)
+{
+    struct stat filestat;
+    ustring fullpath = p;
+    fullpath += entry->d_name;
+    // Get the statistics of file
+    if (stat(fullpath.c_str(), &filestat) != -1) {
+        info.filename = entry->d_name;
+        info.lastModifed = filestat.st_mtime;
+        info.path = fullpath;
+        info.size = filestat.st_size;
+
+        // Get the file type
+        switch (filestat.st_mode & S_IFMT) {
+            case S_IFDIR: info.type = Directory;
+                break;
+            case S_IFLNK: info.type = SymLink;
+                break;
+            case S_IFREG: info.type = RegularFile;
+                break;
+            default:      info.type = Other;
+                break;
+        }
+        return true;
+    } else {
+        showErrorCode(fullpath.c_str());
+        return false;
+    }
 }
 
 }

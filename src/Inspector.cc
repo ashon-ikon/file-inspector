@@ -31,4 +31,22 @@ Inspector::~Inspector() {
 
 }
 
+/**
+ * Sets the destination folder
+ * @param f
+ * @return 
+ */
+bool Inspector::setDestinationFolder(const Glib::ustring& f) {
+    return true;
+}
+
+/**
+ * Sets the source folder
+ * @param f
+ * @return 
+ */
+bool Inspector::setSourceFolder(const Glib::ustring& f) {
+    return true;
+}
+
 }

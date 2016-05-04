@@ -72,6 +72,11 @@ public:
     bool static isDirectory(const char*);
     vector < Fileinfo > static
     getDirectoryContent(const Glib::ustring &p, bool includeHidden = false);
+    bool static 
+    getFileInfo(const Glib::ustring& p, dirent * entry, Fileinfo& info);
+    
+    bool makeDirectory(const Glib::ustring &f);
+    bool removeDirectory(const Glib::ustring &f);
 
     bool isRegularFile(Fileinfo &f);
     static Glib::ustring getType(const FileType& ft);
