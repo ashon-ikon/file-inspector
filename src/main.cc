@@ -16,7 +16,8 @@ using namespace std;
 int main(int argc, char *argv[]) {
 
     const Glib::ustring path = "/home/yinka/Downloads";
-    DirectoryCollection list = FileExplorer::getDirectoryContent(path);
+    FileExplorer exp;
+    DirectoryCollection list = exp.getDirectoryContent(path);
 
     std::cout << "Found :" << list.size() << " items " << std::endl;
 
@@ -26,7 +27,7 @@ int main(int argc, char *argv[]) {
     for (vector<FileExplorer::Fileinfo>::const_iterator it = list.begin();
             it != list.end(); ++it) {
         ++counter;
-        cout << (*it).path.c_str() << ": " << FileExplorer::getType((*it).type) << endl;
+        cout << (*it).path.c_str() << ": " << exp.getType((*it).type) << endl;
     }
 
     return 0;
