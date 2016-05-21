@@ -28,7 +28,7 @@ using namespace Glib;
 namespace FInspector {
 
 bool FileExplorer::Fileinfo::operator < (const Fileinfo& rhs) {
-    return (filename.lowercase() < rhs.filename.lowercase());
+    return (path.lowercase() < rhs.path.lowercase());
 }
 
 FileExplorer::FileExplorer() {
@@ -155,6 +155,9 @@ FileExplorer::getDirectoryContent(const ustring& p, bool deep, bool includeHidde
             dirent * entry;
             // Check that it is 
             while ((entry = readdir(dp))) {
+                // Check if we are to ignore hidden files
+                // On UNIX-like systems this will be anything
+                // matching "." or ".."
                 if ((! includeHidden && '.' == entry->d_name[0])
                 || ('.' == entry->d_name[0] && '.' == entry->d_name[1])) {
                     // This is a hidden file or same directory, skip
@@ -173,13 +176,19 @@ FileExplorer::getDirectoryContent(const ustring& p, bool deep, bool includeHidde
             // We are done close it
             closedir(dp);
 
-            // Sort the items
-            std::sort(content.begin(), content.end());
         } else {
             showErrorCode(tp.c_str());
             // Failed to open the directory
             // Throw exception?
         }
+    }
+    
+    /*
+     * Attempt to sort the content if any
+     */
+    if (content.size() > 0) {
+        // Sort the items
+        std::sort(content.begin(), content.end());
     }
 
     return content;
@@ -222,14 +231,21 @@ bool FileExplorer::getFileInfo(const ustring& p, dirent * entry, FileExplorer::F
     }
 }
 
+/**
+ * Attempts to get the full path of the uri.
+ * On failure, returns the original uri
+ * @param uri
+ * @return 
+ */
 ustring& FileExplorer::getFullPath(ustring& uri) {
     // If it's not a valid directory attempt to combine with current working
     // directory
     if (! isDirectory(uri.c_str())) {
         char* path = realpath(uri.c_str(), NULL);
-        if (isDirectory(path)) {
+        if (path != NULL && isDirectory(path)) {
             uri = path;
         }
+        delete path;
         std::cout << "cwd: '" << uri << "' " << std::endl;
     }
     return uri;
