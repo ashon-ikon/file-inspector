@@ -27,19 +27,34 @@ using namespace Glib;
 
 namespace FInspector {
 
+/**
+ * Comparator operator used for sorting Fileinfo objects
+ * @param rhs
+ * @return 
+ */
 bool FileExplorer::Fileinfo::operator < (const Fileinfo& rhs) {
     return (path.lowercase() < rhs.path.lowercase());
 }
 
+/**
+ * Default constructor
+ */
 FileExplorer::FileExplorer() {
     // We need to set the local
     std::locale::global(std::locale(""));
 }
 
+/**
+ * Copy constructor
+ * @param orig
+ */
 FileExplorer::FileExplorer(const FileExplorer& orig) {
 
 }
 
+/**
+ * Destructor
+ */
 FileExplorer::~FileExplorer() {
 
 }
@@ -62,13 +77,35 @@ bool FileExplorer::removeDirectory(const Glib::ustring& f) {
     return true;
 }
 
-
+/**
+ * Checks if file is of regular type
+ * @param fi
+ * @return 
+ */
 bool FileExplorer::isRegularFile(Fileinfo& fi) {
     return fi.type == RegularFile;
 
 }
 
+/**
+ * Returns true if file is a directory
+ * @param p
+ * @return 
+ */
+bool FileExplorer::isDirectory(const char* p) {
+    bool is = false;
+    struct stat st;
+    if (stat(p, &st) != -1) {
+        is = S_ISDIR(st.st_mode);
+    };
+    
+    return is;
+}
 
+/**
+ * Handy function to show error code
+ * @param filepath
+ */
 void showErrorCode(const char * filepath) 
 {
     
@@ -102,6 +139,11 @@ void showErrorCode(const char * filepath)
         }
 }
 
+/**
+ * Returns the string equivalent of file type
+ * @param ft
+ * @return Glib::ustring
+ */
 ustring FileExplorer::getTypeAsString(const FileType& ft) {
     ustring type;
 
@@ -121,16 +163,6 @@ ustring FileExplorer::getTypeAsString(const FileType& ft) {
     }
 
     return type;
-}
-
-bool FileExplorer::isDirectory(const char* p) {
-    bool is = false;
-    struct stat st;
-    if (stat(p, &st) != -1) {
-        is = S_ISDIR(st.st_mode);
-    };
-    
-    return is;
 }
 
 /**
