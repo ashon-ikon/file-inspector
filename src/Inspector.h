@@ -16,7 +16,7 @@
 
 #include "Helper/Fstr.h"
 #include "Helper/FileExplorer.h"
-#include "Rules/BasicRule.h"
+//#include "Rules/BasicRule.h"
 
 
 using namespace std;

@@ -13,10 +13,14 @@
 
 #include <dirent.h>
 #include <iostream>
+#include <limits>
 #include <sys/stat.h>
+#include <unistd.h>
 
 #include "FileExplorer.h"
 #include "Fstr.h"
+#include "Rules/BasicRule.h"
+#include "stlHelpers.h"
 
 using namespace std;
 using namespace Glib;
@@ -98,7 +102,7 @@ void showErrorCode(const char * filepath)
         }
 }
 
-ustring FileExplorer::getType(const FileType& ft) {
+ustring FileExplorer::getTypeAsString(const FileType& ft) {
     ustring type;
 
     switch (ft) {
@@ -132,11 +136,12 @@ bool FileExplorer::isDirectory(const char* p) {
 /**
  * Gets the content of a path
  * @param p
+ * @param deep
  * @param includeHidden
  * @return 
  */
 vector< FileExplorer::Fileinfo >
-FileExplorer::getDirectoryContent(const ustring& p, bool includeHidden) {
+FileExplorer::getDirectoryContent(const ustring& p, bool deep, bool includeHidden) {
     vector< Fileinfo > content;
     
     ustring tp = p; // We'll be trimming this
@@ -150,14 +155,19 @@ FileExplorer::getDirectoryContent(const ustring& p, bool includeHidden) {
             dirent * entry;
             // Check that it is 
             while ((entry = readdir(dp))) {
-                if (! includeHidden && '.' == entry->d_name[0]) {
-                    // This is a hidden file, skip
+                if ((! includeHidden && '.' == entry->d_name[0])
+                || ('.' == entry->d_name[0] && '.' == entry->d_name[1])) {
+                    // This is a hidden file or same directory, skip
                     continue;
                 }
                 Fileinfo info;
                 if (getFileInfo(tp, entry, info)) {
                     // Add it
                     content.push_back(info);
+                    // Check if we should add the content recursively
+                    if (deep) {
+                        content += getDirectoryContent(info.path, deep, includeHidden);
+                    }
                 }
             }
             // We are done close it
@@ -175,6 +185,13 @@ FileExplorer::getDirectoryContent(const ustring& p, bool includeHidden) {
     return content;
 }
 
+/**
+ * Gets the information about a file
+ * Returns true if info was retrieved successfully
+ * @param p ustring
+ * @param entry dirent
+ * @param info FileInfo
+ */
 bool FileExplorer::getFileInfo(const ustring& p, dirent * entry, FileExplorer::Fileinfo& info)
 {
     struct stat filestat;
@@ -201,8 +218,21 @@ bool FileExplorer::getFileInfo(const ustring& p, dirent * entry, FileExplorer::F
         return true;
     } else {
         showErrorCode(fullpath.c_str());
-        return false;
+        return false;   
     }
+}
+
+ustring& FileExplorer::getFullPath(ustring& uri) {
+    // If it's not a valid directory attempt to combine with current working
+    // directory
+    if (! isDirectory(uri.c_str())) {
+        char* path = realpath(uri.c_str(), NULL);
+        if (isDirectory(path)) {
+            uri = path;
+        }
+        std::cout << "cwd: '" << uri << "' " << std::endl;
+    }
+    return uri;
 }
 
 }

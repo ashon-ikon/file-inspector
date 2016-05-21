@@ -65,6 +65,7 @@ public:
 
         bool operator<(const Fileinfo &rhs);
     };
+
     /**
      * True if string is a directory
      * @param 
@@ -72,7 +73,7 @@ public:
      */
     bool isDirectory(const char*);
     vector < Fileinfo >
-    getDirectoryContent(const Glib::ustring &p, bool includeHidden = false);
+    getDirectoryContent(const Glib::ustring &p, bool deep = true, bool includeHidden = false);
     bool 
     getFileInfo(const Glib::ustring& p, dirent * entry, Fileinfo& info);
     
@@ -80,7 +81,8 @@ public:
     bool removeDirectory(const Glib::ustring &f);
 
     bool isRegularFile(Fileinfo &f);
-    Glib::ustring getType(const FileType& ft);
+    Glib::ustring getTypeAsString(const FileType& ft);
+    Glib::ustring& getFullPath(Glib::ustring& uri);
     
     
 private:
