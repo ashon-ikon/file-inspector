@@ -13,39 +13,99 @@
 
 #include <dirent.h>
 #include <iostream>
+#include <limits>
 #include <sys/stat.h>
+#include <unistd.h>
 
 #include "FileExplorer.h"
 #include "Fstr.h"
+#include "Rules/BasicRule.h"
+#include "stlHelpers.h"
 
 using namespace std;
 using namespace Glib;
 
 namespace FInspector {
 
+/**
+ * Comparator operator used for sorting Fileinfo objects
+ * @param rhs
+ * @return 
+ */
 bool FileExplorer::Fileinfo::operator < (const Fileinfo& rhs) {
-    return (filename.lowercase() < rhs.filename.lowercase());
+    return (path.lowercase() < rhs.path.lowercase());
 }
 
+/**
+ * Default constructor
+ */
 FileExplorer::FileExplorer() {
     // We need to set the local
     std::locale::global(std::locale(""));
 }
 
+/**
+ * Copy constructor
+ * @param orig
+ */
 FileExplorer::FileExplorer(const FileExplorer& orig) {
 
 }
 
+/**
+ * Destructor
+ */
 FileExplorer::~FileExplorer() {
 
 }
 
+/**
+ * Makes Directory
+ * @param f
+ * @return 
+ */
+bool FileExplorer::makeDirectory(const Glib::ustring& f) {
+    return true;
+}
+
+/**
+ * Removes Directory
+ * @param f
+ * @return 
+ */
+bool FileExplorer::removeDirectory(const Glib::ustring& f) {
+    return true;
+}
+
+/**
+ * Checks if file is of regular type
+ * @param fi
+ * @return 
+ */
 bool FileExplorer::isRegularFile(Fileinfo& fi) {
     return fi.type == RegularFile;
 
 }
 
+/**
+ * Returns true if file is a directory
+ * @param p
+ * @return 
+ */
+bool FileExplorer::isDirectory(const char* p) {
+    bool is = false;
+    struct stat st;
+    if (stat(p, &st) != -1) {
+        is = S_ISDIR(st.st_mode);
+    };
+    
+    return is;
+}
 
+/**
+ * Handy function to show error code
+ * @param filepath
+ */
 void showErrorCode(const char * filepath) 
 {
     
@@ -79,7 +139,12 @@ void showErrorCode(const char * filepath)
         }
 }
 
-ustring FileExplorer::getType(const FileType& ft) {
+/**
+ * Returns the string equivalent of file type
+ * @param ft
+ * @return Glib::ustring
+ */
+ustring FileExplorer::getTypeAsString(const FileType& ft) {
     ustring type;
 
     switch (ft) {
@@ -100,24 +165,15 @@ ustring FileExplorer::getType(const FileType& ft) {
     return type;
 }
 
-bool FileExplorer::isDirectory(const char* p) {
-    bool is = false;
-    struct stat st;
-    if (stat(p, &st) != -1) {
-        is = S_ISDIR(st.st_mode);
-    };
-    
-    return is;
-}
-
 /**
  * Gets the content of a path
  * @param p
+ * @param deep
  * @param includeHidden
  * @return 
  */
 vector< FileExplorer::Fileinfo >
-FileExplorer::getDirectoryContent(const ustring& p, bool includeHidden) {
+FileExplorer::getDirectoryContent(const ustring& p, bool deep, bool includeHidden) {
     vector< Fileinfo > content;
     
     ustring tp = p; // We'll be trimming this
@@ -129,54 +185,102 @@ FileExplorer::getDirectoryContent(const ustring& p, bool includeHidden) {
 
         if (dp) {
             dirent * entry;
-            struct stat filestat;
             // Check that it is 
             while ((entry = readdir(dp))) {
-                if (! includeHidden && '.' == entry->d_name[0]) {
-                    // This is a hidden file, skip
+                // Check if we are to ignore hidden files
+                // On UNIX-like systems this will be anything
+                // matching "." or ".."
+                if ((! includeHidden && '.' == entry->d_name[0])
+                || ('.' == entry->d_name[0] && '.' == entry->d_name[1])) {
+                    // This is a hidden file or same directory, skip
                     continue;
                 }
-                ustring fullpath = ctp;
-                fullpath += entry->d_name;
-                // Get the statistics of file
-                if (stat(fullpath.c_str(), &filestat) != -1) {
-                    FileExplorer::Fileinfo info;
-                    info.filename = entry->d_name;
-                    info.lastModifed = filestat.st_mtime;
-                    info.path = fullpath;
-                    info.size = filestat.st_size;
-
-                    // Get the file type
-                    switch (filestat.st_mode & S_IFMT) {
-                        case S_IFDIR: info.type = Directory;
-                            break;
-                        case S_IFLNK: info.type = SymLink;
-                            break;
-                        case S_IFREG: info.type = RegularFile;
-                            break;
-                        default:      info.type = Other;
-                            break;
-                    }
-
+                Fileinfo info;
+                if (getFileInfo(tp, entry, info)) {
                     // Add it
                     content.push_back(info);
-                } else {
-                    showErrorCode(fullpath.c_str());
+                    // Check if we should add the content recursively
+                    if (deep) {
+                        content += getDirectoryContent(info.path, deep, includeHidden);
+                    }
                 }
             }
             // We are done close it
             closedir(dp);
 
-            // Sort the items
-            std::sort(content.begin(), content.end());
         } else {
             showErrorCode(tp.c_str());
             // Failed to open the directory
             // Throw exception?
         }
     }
+    
+    /*
+     * Attempt to sort the content if any
+     */
+    if (content.size() > 0) {
+        // Sort the items
+        std::sort(content.begin(), content.end());
+    }
 
     return content;
+}
+
+/**
+ * Gets the information about a file
+ * Returns true if info was retrieved successfully
+ * @param p ustring
+ * @param entry dirent
+ * @param info FileInfo
+ */
+bool FileExplorer::getFileInfo(const ustring& p, dirent * entry, FileExplorer::Fileinfo& info)
+{
+    struct stat filestat;
+    ustring fullpath = p;
+    fullpath += entry->d_name;
+    // Get the statistics of file
+    if (stat(fullpath.c_str(), &filestat) != -1) {
+        info.filename = entry->d_name;
+        info.lastModifed = filestat.st_mtime;
+        info.path = fullpath;
+        info.size = filestat.st_size;
+
+        // Get the file type
+        switch (filestat.st_mode & S_IFMT) {
+            case S_IFDIR: info.type = Directory;
+                break;
+            case S_IFLNK: info.type = SymLink;
+                break;
+            case S_IFREG: info.type = RegularFile;
+                break;
+            default:      info.type = Other;
+                break;
+        }
+        return true;
+    } else {
+        showErrorCode(fullpath.c_str());
+        return false;   
+    }
+}
+
+/**
+ * Attempts to get the full path of the uri.
+ * On failure, returns the original uri
+ * @param uri
+ * @return 
+ */
+ustring& FileExplorer::getFullPath(ustring& uri) {
+    // If it's not a valid directory attempt to combine with current working
+    // directory
+    if (! isDirectory(uri.c_str())) {
+        char* path = realpath(uri.c_str(), NULL);
+        if (path != NULL && isDirectory(path)) {
+            uri = path;
+        }
+        delete path;
+        std::cout << "cwd: '" << uri << "' " << std::endl;
+    }
+    return uri;
 }
 
 }
