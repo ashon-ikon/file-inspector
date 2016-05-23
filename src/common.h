@@ -9,6 +9,7 @@
 #define FINSPECTOR_COMMON__
 
 #include "../config.h"
+#include "Helper/stlHelpers.h"
 #include "Helper/FileExplorer.h"
 #include "Helper/Fstr.h"
 

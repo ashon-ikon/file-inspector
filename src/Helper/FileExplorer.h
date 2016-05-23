@@ -12,6 +12,7 @@
 #include <glibmm/ustring.h>
 #include <functional>
 #include <vector>
+#include <map>
 
 /*
  * Some macros
@@ -30,7 +31,7 @@
 
 
 using std::vector;
-
+using std::map;
 
 namespace FInspector {
 
@@ -64,17 +65,26 @@ public:
 
         bool operator<(const Fileinfo &rhs);
     };
+
     /**
      * True if string is a directory
      * @param 
      * @return 
      */
-    bool static isDirectory(const char*);
-    vector < Fileinfo > static
-    getDirectoryContent(const Glib::ustring &p, bool includeHidden = false);
+    bool isDirectory(const char*);
+    vector < Fileinfo >
+    getDirectoryContent(const Glib::ustring &p, bool deep = true, bool includeHidden = false);
+    bool 
+    getFileInfo(const Glib::ustring& p, dirent * entry, Fileinfo& info);
+    
+    bool makeDirectory(const Glib::ustring &f);
+    bool removeDirectory(const Glib::ustring &f);
 
     bool isRegularFile(Fileinfo &f);
-    static Glib::ustring getType(const FileType& ft);
+    Glib::ustring getTypeAsString(const FileType& ft);
+    Glib::ustring& getFullPath(Glib::ustring& uri);
+    
+    
 private:
 
 };

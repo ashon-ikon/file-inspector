@@ -35,3 +35,4 @@ nbproject*
 .settings*
 
 src/Helper/*.dirstamp
+*.dirstamp

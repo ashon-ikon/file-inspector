@@ -16,6 +16,7 @@
 
 #include "Helper/Fstr.h"
 #include "Helper/FileExplorer.h"
+//#include "Rules/BasicRule.h"
 
 
 using namespace std;
@@ -25,8 +26,14 @@ namespace FInspector {
     class Inspector {
 
     public:
+        // Initializers
         Inspector();
         Inspector(const Inspector &orig);
+        
+        // Setup related functions
+        bool setDestinationFolder(const Glib::ustring& f);
+        bool setSourceFolder(const Glib::ustring& f);
+        // Destructor...
         virtual ~Inspector();
     protected:
         
