@@ -18,9 +18,9 @@
 #include <unistd.h>
 
 #include "FileExplorer.h"
-#include "Fstr.h"
-#include "Rules/BasicRule.h"
-#include "stlHelpers.h"
+#include "../Helper/Fstr.h"
+#include "../Helper/stlHelpers.h"
+#include "../Rules/BasicRule.h"
 
 using namespace std;
 using namespace Glib;
@@ -277,8 +277,9 @@ ustring& FileExplorer::getFullPath(ustring& uri) {
         if (path != NULL && isDirectory(path)) {
             uri = path;
         }
-        delete path;
-        std::cout << "cwd: '" << uri << "' " << std::endl;
+        // realpath uses malloc
+        // hence we have to always clean up
+        delete[] path;
     }
     return uri;
 }

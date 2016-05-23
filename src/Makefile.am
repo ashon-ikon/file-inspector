@@ -5,9 +5,11 @@
 ##
 ##
 bin_PROGRAMS=$(top_builddir)/bin/inspector
+
 __top_builddir__bin_inspector_SOURCES= \
+	Core/FileExplorer.cc \
+	Core/ConfManager.cc \
 	Helper/Fstr.cc \
-	Helper/FileExplorer.cc \
 	Rules/SameName.cc \
 	Inspector.cc \
 	main.cc

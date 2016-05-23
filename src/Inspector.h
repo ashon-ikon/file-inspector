@@ -15,7 +15,7 @@
 #include <glibmm/ustring.h>
 
 #include "Helper/Fstr.h"
-#include "Helper/FileExplorer.h"
+#include "Core/FileExplorer.h"
 //#include "Rules/BasicRule.h"
 
 

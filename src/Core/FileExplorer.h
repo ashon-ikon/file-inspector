@@ -5,8 +5,8 @@
  * Created on 9 April 2016, 3:51 PM
  */
 
-#ifndef FINSPECTOR_HELPER_FILE_EXPLORER_H__
-#define FINSPECTOR_HELPER_FILE_EXPLORER_H__
+#ifndef FINSPECTOR_CORE_FILE_EXPLORER_H__
+#define FINSPECTOR_CORE_FILE_EXPLORER_H__
 
 #include <algorithm>
 #include <glibmm/ustring.h>
@@ -92,5 +92,5 @@ private:
 typedef vector< FileExplorer::Fileinfo > DirectoryCollection;
 
 }
-#endif /* FINSPECTOR_HELPER_FILE_EXPLORER_H__ */
+#endif /* FINSPECTOR_CORE_FILE_EXPLORER_H__ */
 
