@@ -28,6 +28,7 @@ src/*.Po
 
 # IDEs
 nbproject*
+.idea
 .idea*
 .autotools
 .cproject
